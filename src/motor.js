@@ -14,7 +14,7 @@ const esperar = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 async function procesarPedido(pedido) {
   const tiempoInicio = Date.now();
   console.log(`\n==================================================`);
-  console.log(`📦 PROCESANDO PEDIDO #${pedido.id} - Cliente: ${pedido.cliente.nombre}`);
+  console.log(`PROCESANDO PEDIDO #${pedido.id} - Cliente: ${pedido.cliente.nombre}`);
   console.log(`==================================================`);
 
   let datosPago = null;
