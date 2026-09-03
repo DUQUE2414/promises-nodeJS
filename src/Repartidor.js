@@ -6,7 +6,14 @@ function normalizarTexto(texto) {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
-function asignarRepartidor(zonaEntrega, intento = 1) {
+/**
+ * Intenta asignar un repartidor a la zona indicada.
+ * Si no hay repartidores disponibles y el pago ya fue confirmado,
+ * el llamador debe encargarse de reversed el pago (ver RF-4).
+ * 
+ * Firma: asignarRepartidor(zonaEntrega) -> Promise<repartidor | error>
+ */
+function asignarRepartidor(zonaEntrega) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       const repartidores = [
@@ -25,16 +32,8 @@ function asignarRepartidor(zonaEntrega, intento = 1) {
 
       if (!repartidorDisponible) {
         const error = new Error("No hay repartidores disponibles en este momento.");
-
-        if (intento < 2) {
-          console.error(error.message);
-          console.log("Reintentando automáticamente...");
-          resolve(asignarRepartidor(zonaEntrega, intento + 1));
-          return;
-        }
-
-        console.error("Se envió a soporte y se hará un reporte.");
-        reject(new Error("Se envió a soporte y se hará un reporte."));
+        console.error(error.message);
+        reject(error);
         return;
       }
 
@@ -48,10 +47,4 @@ function asignarRepartidor(zonaEntrega, intento = 1) {
   });
 }
 
-asignarRepartidor("NOrté")
-  .then((repartidor) => {
-    console.log("Repartidor asignado:", repartidor);
-  })
-  .catch((error) => {
-    console.error("Error:", error.message);
-  });
+export { asignarRepartidor };
